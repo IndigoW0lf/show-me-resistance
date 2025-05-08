@@ -1,47 +1,55 @@
-# Astro Starter Kit: Minimal
+# 🌪️ Show Me Resistance
 
-```sh
-npm create astro@latest -- --template minimal
-```
+**A civic engagement and political education platform for Missouri.**
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+Show Me Resistance exists to expose harmful legislation and political hypocrisy in Missouri and empower citizens—especially those outside liberal strongholds—to take informed, meaningful action.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+> Clarity. Defiance. Truth. Action.
 
-## 🚀 Project Structure
+---
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🧭 Project Vision
 
-```text
-/
-├── public/
+Missourians deserve clear, accessible information about their state's laws and lawmakers. Our goal is to:
+
+- Educate the public in plain language
+- Track and expose elected officials' voting records
+- Follow the money behind Missouri's legislation
+- Offer tools for direct action
+- Amplify rural and progressive voices
+
+---
+
+## 🌐 Website Features (In Progress)
+
+- **Bill Breakdown Archive**: Weekly posts summarizing active legislation
+- **Vote Tracker**: Visual dashboard of how lawmakers voted
+- **Action Center**: Contact scripts, testimony guides, and organizing resources
+- **What They’re Selling**: Follow-the-money infographics and donor data
+- **Narratives from Missouri**: Rural stories, rebuttals, and progressive voices
+- **Email Subscription & Shareables**: Sign-up, tweet threads, quote cards, and more
+
+---
+
+## 🛠 Tech Stack
+
+| Layer       | Tool                        |
+|-------------|-----------------------------|
+| Framework   | [Astro](https://astro.build) (static site generator) |
+| Language    | Markdown / Astro Components |
+| Deployment  | GitHub + Vercel |
+
+---
+
+## 📁 Project Structure
+
+```plaintext
+show-me-resistance/
+├── public/              → Static assets (logos, graphics, PDFs)
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+│   ├── pages/           → index.astro, about.astro, bill-breakdowns/
+│   ├── layouts/         → BaseLayout.astro, PostLayout.astro
+│   ├── components/      → VoteTracker.astro, ActionCard.astro, etc.
+│   ├── content/         → Markdown blog content
+├── astro.config.mjs
+├── package.json
