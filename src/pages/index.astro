@@ -1,16 +1,35 @@
 ---
-
+import BaseLayout from './layouts/BaseLayout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Show Me Resistance">
+  <section class="hero">
+    <h1>Missouri Deserves Better.</h1>
+    <p>
+      Show Me Resistance is a platform for exposing destructive legislation,
+      corrupt interests, and political hypocrisy across Missouri — with a focus
+      on truth, defiance, and action.
+    </p>
+    <a href="/bill-breakdowns/" class="button">Read the Latest Bill Breakdown</a>
+  </section>
+
+  <section class="features">
+    <h2>What We Do</h2>
+    <ul>
+      <li><strong>Bill Breakdowns</strong>: Weekly summaries of key bills, their impacts, and progress.</li>
+      <li><strong>Vote Tracker</strong>: See how your elected officials are voting — and who they serve.</li>
+      <li><strong>Dark Money</strong>: Follow the money behind Missouri politics with donor maps and charts.</li>
+      <li><strong>Action Center</strong>: Scripts, resources, and guides to help you take real action.</li>
+    </ul>
+  </section>
+
+  <section class="subscribe">
+    <h2>Stay Connected</h2>
+    <p>Sign up for our newsletter to get the latest updates and calls to action.</p>
+    <!-- Replace this with actual form integration later -->
+    <form>
+      <input type="email" placeholder="you@example.com" />
+      <button type="submit">Subscribe</button>
+    </form>
+  </section>
+</BaseLayout>
