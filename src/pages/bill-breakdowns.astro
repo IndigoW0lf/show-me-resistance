@@ -1,0 +1,104 @@
+---
+import { getCollection } from 'astro:content';
+import BillCard from '../components/BillCard.astro';
+import BaseLayout from '../layout/BaseLayout.astro';
+
+const bills = await getCollection('bill-breakdowns');
+---
+
+<BaseLayout title="Bill Breakdowns">
+  <h1>Bill Breakdowns</h1>
+  
+  <script type="module" is:inline>
+  const filterButtons = document.querySelectorAll('[data-filter]');
+  const cards = document.querySelectorAll('[data-chamber]');
+
+  filterButtons.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const filter = btn.dataset.filter;
+      filterButtons.forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      cards.forEach((card) => {
+        if (filter === 'All' || card.dataset.chamber === filter) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    })
+  );
+</script>
+
+<script type="module" is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const statusSelect = document.getElementById('status-filter');
+    const cards = document.querySelectorAll('[data-status]');
+
+    statusSelect.addEventListener('change', () => {
+      const value = statusSelect.value;
+      cards.forEach((card) => {
+        if (value === 'All' || card.dataset.status === value) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+</script>
+
+<div class="filters">
+  <label for="status-filter">Filter by Status:</label>
+  <select id="status-filter">
+    <option value="All">All Statuses</option>
+    <option value="Introduced">Introduced</option>
+    <option value="Passed">Passed</option>
+    <option value="Failed">Failed</option>
+    <option value="Enacted">Enacted</option>
+  </select>
+</div>
+
+
+<div class="filters">
+  <button class="active" data-filter="All">All</button>
+  <button data-filter="House">House Bills</button>
+  <button data-filter="Senate">Senate Bills</button>
+</div>
+
+  <div class="grid">
+    {bills.map((bill: { slug: string; data: { bill_number: string; title: string; date: string; status: string; chamber: 'House' | 'Senate' } }) => (
+      <BillCard
+        href={`/bill-breakdowns/${bill.slug}/`}
+        billNumber={bill.data.bill_number}
+        title={bill.data.title}
+        date={bill.data.date}
+        status={bill.data.status}
+        chamber={bill.data.chamber}
+      />
+    ))}
+  </div>
+
+  <style>
+    .grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      margin-top: 2rem;
+    }
+
+    .filters {
+  margin-bottom: 1.5rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filters label {
+  font-weight: bold;
+}
+  </style>
+</BaseLayout>
+
+
