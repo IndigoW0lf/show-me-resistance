@@ -1,0 +1,82 @@
+.bill-card {
+  border-radius: 12px;
+  padding: 1rem;
+  background: white;
+  border-left: 6px solid gray;
+  transition: box-shadow 0.2s ease;
+}
+
+.bill-card.house {
+  border-left-color: #1e90ff;
+}
+
+.bill-card.senate {
+  border-left-color: #a020f0;
+}
+
+.bill-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.bill-card h2 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.bill-card h3 {
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
+  color: #444;
+}
+
+.bill-card small.date {
+  color: #777;
+}
+
+.bill-card .status {
+  background: #eee;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  text-transform: capitalize;
+  color: #333;
+}
+
+.bill-card .summary {
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+  margin-top: 0.5rem;
+  color: #333;
+}
+
+.grid {
+  display: grid;
+  gap: 3.0rem;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  justify-content: center;
+  align-items: start;
+  margin-top: 3rem;
+}
+
+.bill-card {
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+}
+

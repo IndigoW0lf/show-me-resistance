@@ -1,113 +1,110 @@
 ---
-import { getCollection } from 'astro:content';
+import type { Bill } from '../lib/db';
+import { getAllBills } from '../lib/db';
+import { getStatusLabel, statusMap } from '../lib/utils';
 import BillCard from '../components/BillCard.astro';
 import BaseLayout from '../layout/BaseLayout.astro';
 
-const bills = await getCollection('bill-breakdowns');
+const search = Astro.url.searchParams;
+const selectedStatus = search.get('status') || 'All';
+const selectedChamber = (search.get('chamber') || 'All').toLowerCase();
+
+const bills: Bill[] = await getAllBills();
+const statusOptions = Object.entries(statusMap);
+
+const chamberMap: Record<string, number> = {
+  house: 59,
+  senate: 60,
+};
+
+const validChamber = selectedChamber in chamberMap;
+
+const filteredBills = bills.filter((bill) => {
+  const matchesStatus =
+    selectedStatus === 'All' ||
+    getStatusLabel(bill.status_id) === getStatusLabel(Number(selectedStatus));
+
+  const matchesChamber =
+    selectedChamber === 'all' ||
+    (validChamber && bill.body_id === chamberMap[selectedChamber]);
+
+  return matchesStatus && matchesChamber;
+});
 ---
 
 <BaseLayout title="Bill Breakdowns">
   <h1>Bill Breakdowns</h1>
-  
-  <script type="module" is:inline>
-  const filterButtons = document.querySelectorAll('[data-filter]');
-  const cards = document.querySelectorAll('[data-chamber]');
 
-  filterButtons.forEach((btn) =>
-    btn.addEventListener('click', () => {
-      const filter = btn.dataset.filter;
-      filterButtons.forEach((b) => b.classList.remove('active'));
-      btn.classList.add('active');
+  <div class="filters">
+    <label for="status-filter">Filter by Status:</label>
+    <select id="status-filter" onchange="handleStatusChange(event)">
+      <option value="All">All Statuses</option>
+      {statusOptions.map(([id, label]) => (
+        <option value={id} selected={selectedStatus === id}>{label}</option>
+      ))}
+    </select>
+  </div>
 
-      cards.forEach((card) => {
-        if (filter === 'All' || card.dataset.chamber === filter) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    })
-  );
-</script>
+  <div class="filters">
+    {['all', 'house', 'senate'].map(label => (
+      <button
+        class={`chamber-filter ${selectedChamber === label ? 'active' : ''}`}
+        data-filter={label}
+      >
+        {label === 'all' ? 'All Bills' : `${label.charAt(0).toUpperCase() + label.slice(1)} Bills`}
+      </button>
+    ))}
+  </div>
 
-<script type="module" is:inline>
-  document.addEventListener('DOMContentLoaded', () => {
-    const statusSelect = document.getElementById('status-filter');
-    const filterCards = () => {
-      const value = statusSelect.value;
-      const cards = document.querySelectorAll('[data-status]');
-      cards.forEach((card) => {
-        if (value === 'All' || card.dataset.status === value) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    };
-
-    // Run it on page load AND on change
-    filterCards();
-    statusSelect.addEventListener('change', filterCards);
-  });
-</script>
-
-<div class="filters">
-  <label for="status-filter">Filter by Status:</label>
-  <select id="status-filter">
-    <option value="All">All Statuses</option>
-    <option value="Introduced">Introduced</option>
-    <option value="Engrossed">Engrossed</option>
-    <option value="Enrolled">Enrolled</option>
-    <option value="Passed">Passed</option>
-    <option value="Vetoed">Vetoed</option>
-    <option value="Failed">Failed</option>
-    <option value="Enacted">Enacted</option>
-  </select>
-</div>
-
-
-
-<div class="filters">
-  <button class="active" data-filter="All">All</button>
-  <button data-filter="House">House Bills</button>
-  <button data-filter="Senate">Senate Bills</button>
-</div>
+  {filteredBills.length === 0 && <p>No matching bills found.</p>}
 
   <div class="grid">
-    {bills.map((bill) => (
+    {filteredBills.map((bill: Bill) => (
       <BillCard
-        href={`/bill-breakdowns/${bill.slug}/`}
-        billNumber={bill.data.bill_number}
-        title={bill.data.title}
-        date={bill.data.date}
-        status={bill.data.status}
-        chamber={bill.data.chamber}
-        summary_short={bill.data.summary_short}
-
+        billNumber={bill.bill_number}
+        title={bill.title}
+        date={bill.status_date || ''}
+        status={bill.status_id.toString()}
+        chamber={bill.body_id === 2 ? 'Senate' : 'House'}
+        summary_short={bill.description}
       />
     ))}
   </div>
 
-  <style>
-    .grid {
-      display: grid;
-      gap: 1.5rem;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      margin-top: 2rem;
+  <script is:inline>
+    const chamberButtons = document.querySelectorAll('.chamber-filter');
+
+    function handleStatusChange(e) {
+      const value = e.target.value;
+      const params = new URLSearchParams(window.location.search);
+      params.set('status', value);
+      window.location.search = params.toString();
     }
 
-    .filters {
-  margin-bottom: 1.5rem;
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-  flex-wrap: wrap;
-}
+    chamberButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const filter = btn.dataset.filter;
+        const params = new URLSearchParams(window.location.search);
+        params.set('chamber', filter);
+        window.location.search = params.toString();
+      });
+    });
+  </script>
 
-.filters label {
-  font-weight: bold;
-}
+  <style>
+    button.active {
+      background: var(--accent);
+      color: white;
+    }
+    .filters {
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .filters label {
+      font-weight: bold;
+    }
   </style>
 </BaseLayout>
-
-

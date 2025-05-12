@@ -20,6 +20,22 @@ body {
   font-size: 18px;
 }
 
+.logo {
+  font-family: var(--font-header);
+  font-size: 2rem;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.logo a {
+  text-decoration: none;
+  color: var(--accent);
+}
+
+.logo a:hover {
+  color: white;
+}
+
 header,
 footer {
   background: #000;
@@ -46,7 +62,7 @@ nav a:hover {
 
 main {
   padding: 2rem;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 

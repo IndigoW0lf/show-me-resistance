@@ -1,0 +1,173 @@
+---
+import { getBillDetails } from '../../lib/db';
+import Layout from '../../layout/BaseLayout.astro';
+import { AstroError } from 'astro/errors';
+import { getStatusLabel } from '../../lib/utils';
+
+const { billNumber } = Astro.params;
+const search = Astro.url.searchParams;
+
+if (!billNumber) {
+  throw new AstroError('Bill number is required');
+}
+
+const rows = await getBillDetails(billNumber);
+
+if (!rows.length) {
+  throw new AstroError(`Bill not found: ${billNumber}`);
+}
+
+const {
+  bill_number,
+  title,
+  summary,
+  tags,
+  sponsor,
+  vote_summary,
+  chamber,
+  date,
+  status,
+} = rows[0];
+
+const statusLabel = getStatusLabel(Number(status));
+
+const parsedTags = tags?.split(',').map((t: string) => t.trim()) ?? [];
+
+const backHref = `/bill-breakdowns?status=${search.get('status') ?? ''}&page=${search.get('page') ?? ''}`;
+
+
+---
+
+<Layout>
+  <a href={backHref} class="button back-button">← Back to Bill Breakdowns</a>
+
+
+  <article class="bill-detail" data-chamber={chamber}>
+    <header>
+      <h1>{bill_number}: {title}</h1>
+      <div class="meta">
+        <span class="status">{statusLabel}</span>
+
+        <span class="chamber">{chamber}</span>
+        <span class="date">{new Date(date).toLocaleDateString()}</span>
+      </div>
+    </header>
+
+    {sponsor && (
+      <p class="sponsor"><strong>Sponsor:</strong> {sponsor}</p>
+    )}
+
+    {vote_summary && (
+      <p class="vote-summary"><strong>Votes:</strong> {vote_summary}</p>
+    )}
+
+    <section class="summary">
+      <h2>What This Bill Does</h2>
+      <p>{summary || 'No summary available.'}</p>
+    </section>
+
+    {parsedTags.length > 0 && (
+      <section class="tags">
+        <h2>Tags</h2>
+        <ul>
+          {parsedTags.map(tag => <li class="tag">{tag}</li>)}
+        </ul>
+      </section>
+    )}
+  </article>
+
+  <style>
+
+      .back-button {
+      display: inline-block;
+      margin-bottom: 1rem;
+      text-decoration: none;
+      background: var(--accent);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-family: var(--font-header);
+      border-radius: 4px;
+      transition: background 0.2s ease;
+    }
+
+    .back-button:hover {
+      background: #c53030;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin: 1rem 0;
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .bill-detail {
+      max-width: 60ch;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .meta {
+      font-size: 0.85rem;
+      color: #666;
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .sponsor, .vote-summary {
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .summary p {
+      line-height: 1.6;
+      font-size: 1.1rem;
+    }
+
+    .tags ul {
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .tag {
+      background: var(--accent, #444);
+      color: white;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.3rem;
+    }
+
+    .status {
+      background: #eee;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.25rem;
+      font-weight: 500;
+    }
+
+    .chamber {
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .date {
+      font-style: italic;
+    }
+  </style>
+</Layout>

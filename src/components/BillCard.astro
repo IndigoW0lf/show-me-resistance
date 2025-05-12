@@ -1,85 +1,32 @@
 ---
+import { getStatusLabel } from '../lib/utils';
+
 export interface Props {
-  title: string;
   billNumber: string;
+  title: string;
+  summary_short?: string;
   date: string;
-  href: string;
   status: string;
   chamber: 'House' | 'Senate';
-  summary_short: string;
 }
 
-const { billNumber, date, href, status, chamber, summary_short } = Astro.props;
+const { billNumber, title, date, status, chamber } = Astro.props;
+const search = Astro.url.searchParams;
+
+const currentStatus = search.get('status') ?? '';
+const currentPage = search.get('page') ?? '';
+const href = `/bill/${billNumber.toLowerCase()}?status=${encodeURIComponent(currentStatus)}&page=${encodeURIComponent(currentPage)}`;
 ---
 
-<article class={`bill-card ${chamber.toLowerCase()}`} data-chamber={chamber} data-status={status}>
-
+<article class={`bill-card ${chamber.toLowerCase()}`} data-chamber={chamber.toLowerCase()}>
   <a href={href} class="card-link">
     <div class="card-header">
       <h2>{billNumber}</h2>
-      <span class="status">{status}</span>
+      <span class="status">{getStatusLabel(Number(status))}</span>
     </div>
-    <h2>{billNumber}</h2>
-    <p class="short">{summary_short}</p>
+    <p class="summary">{title}</p>
     <small class="date">{new Date(date).toLocaleDateString()}</small>
   </a>
 </article>
 
-<style>
-  .bill-card {
-    border-radius: 12px;
-    padding: 1rem;
-    background: white;
-    border-left: 6px solid gray;
-    transition: box-shadow 0.2s ease;
-  }
-
-  .bill-card.house {
-    border-left-color: #1e90ff; /* blue */
-  }
-
-  .bill-card.senate {
-    border-left-color: #a020f0; /* purple */
-  }
-
-  .bill-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  }
-
-  .card-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-  }
-
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
-  }
-
-  h2 {
-    margin: 0;
-    font-size: 1.1rem;
-    color: #333;
-  }
-
-  p {
-    margin: 0 0 0.5rem;
-    font-weight: 500;
-  }
-
-  small {
-    color: #777;
-  }
-
-  .status {
-    background: #eee;
-    border-radius: 4px;
-    font-size: 0.7rem;
-    padding: 0.2rem 0.5rem;
-    text-transform: capitalize;
-    color: #333;
-  }
-</style>
+<link rel="stylesheet" href="/styles/cards.css" />
