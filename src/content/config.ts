@@ -7,7 +7,12 @@ const bills = defineCollection({
     date: z.string(),
     status: z.string(),
     chamber: z.enum(['House', 'Senate']),
-    draft: z.boolean(),
+    sponsor: z.string().optional(),
+    vote_summary: z.string().optional(),
+    summary_short: z.string().optional(),
+    summary: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    draft: z.boolean().optional(),
   }),
 });
 

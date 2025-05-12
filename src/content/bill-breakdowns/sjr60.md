@@ -1,0 +1,26 @@
+---
+title: Modifies provisions relating to the judiciary, including access to judicial
+  records, judicial lobbying activities, and nonpartisan court plan
+bill_number: SJR60
+date: Wed Jan 03 2024 00:00:00 GMT-0600 (Central Standard Time)
+status: Introduced
+chamber: Senate
+sponsor: Unknown
+vote_summary: Unavailable
+legiscan_url: https://legiscan.com/MO/text/SJR60/id/2861603
+draft: false
+bill_text: "|\n  SECOND REGULAR SESSION\n  SENATE JOINT RESOLUTION NO. 60\n  102ND\
+  \ GENERA L ASSEMBLY\n  INTRODUCED BY SENATOR BRATTIN.\n  3304S.01I KRISTINA MARTIN,\
+  \ Secretary\n  JOINT RESOLUTION\n  Submitting to the qualified voters of Missouri,\
+  \ an amendment repealing sections 12, 20, 25(a), and\n  25(d) of article V of the\
+  \ Constitution of Missouri, and adopting five new sections in\n  lieu thereof relating\
+  \ to the judiciary.\n  Be it resolved by the Senate, the House of Representatives\
+  \ concurring therein:"
+---
+Modifies provisions relating to the judiciary, including access to judicial records, judicial lobbying activities, and nonpartisan court plan
+
+---
+
+## Read Full Bill Text
+
+You can view the full text [here](https://legiscan.com/MO/text/SJR60/id/2861603).

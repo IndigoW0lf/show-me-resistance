@@ -33,10 +33,9 @@ const bills = await getCollection('bill-breakdowns');
 <script type="module" is:inline>
   document.addEventListener('DOMContentLoaded', () => {
     const statusSelect = document.getElementById('status-filter');
-    const cards = document.querySelectorAll('[data-status]');
-
-    statusSelect.addEventListener('change', () => {
+    const filterCards = () => {
       const value = statusSelect.value;
+      const cards = document.querySelectorAll('[data-status]');
       cards.forEach((card) => {
         if (value === 'All' || card.dataset.status === value) {
           card.style.display = '';
@@ -44,7 +43,11 @@ const bills = await getCollection('bill-breakdowns');
           card.style.display = 'none';
         }
       });
-    });
+    };
+
+    // Run it on page load AND on change
+    filterCards();
+    statusSelect.addEventListener('change', filterCards);
   });
 </script>
 
@@ -53,11 +56,15 @@ const bills = await getCollection('bill-breakdowns');
   <select id="status-filter">
     <option value="All">All Statuses</option>
     <option value="Introduced">Introduced</option>
+    <option value="Engrossed">Engrossed</option>
+    <option value="Enrolled">Enrolled</option>
     <option value="Passed">Passed</option>
+    <option value="Vetoed">Vetoed</option>
     <option value="Failed">Failed</option>
     <option value="Enacted">Enacted</option>
   </select>
 </div>
+
 
 
 <div class="filters">
@@ -67,7 +74,7 @@ const bills = await getCollection('bill-breakdowns');
 </div>
 
   <div class="grid">
-    {bills.map((bill: { slug: string; data: { bill_number: string; title: string; date: string; status: string; chamber: 'House' | 'Senate' } }) => (
+    {bills.map((bill) => (
       <BillCard
         href={`/bill-breakdowns/${bill.slug}/`}
         billNumber={bill.data.bill_number}
@@ -75,6 +82,8 @@ const bills = await getCollection('bill-breakdowns');
         date={bill.data.date}
         status={bill.data.status}
         chamber={bill.data.chamber}
+        summary_short={bill.data.summary_short}
+
       />
     ))}
   </div>
